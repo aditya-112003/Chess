@@ -1,0 +1,11 @@
+.root {
+    background-color: black;
+}
+
+.hoja {
+    background-image: url('../../public/assets/funkychessbackground.jpg');
+    background-size:auto;
+    backdrop-filter: blur(10px); 
+}
+
+

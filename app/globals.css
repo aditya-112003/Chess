@@ -2,26 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+.root {
+  background-image: url('https://t4.ftcdn.net/jpg/04/96/63/81/240_F_496638107_KklRCseo1iAcIUc4vwFLqUteo9jkVIbL.jpg');
+  background-color: rgb(9, 61, 9);
+  /* background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center; */
+  /* Add more styling as needed */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
+
