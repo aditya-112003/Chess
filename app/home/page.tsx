@@ -40,7 +40,9 @@ const Page =  () => {
                     <div>
                         <Chessboard boardWidth={600} customBoardStyle={{ borderRadius: "4px", boxShadow: "0 2px 10px rgba(0, 0, 0, 0.8)" }} position={position} animationDuration={500} areArrowsAllowed={false} arePiecesDraggable={false} />
                     </div>
-                    <Button danger disabled={disabled} children={'Press Me'} type="button" onClick={handleOnClick} />
+                    <Button danger disabled={disabled} type="button" onClick={handleOnClick}>
+                        Press Me
+                    </Button>
                 </div>  
             </div>
         </>
