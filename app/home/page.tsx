@@ -7,7 +7,7 @@ import Button from "../components/Button"
 import Navbar from "../components/Navbar"
 import Sidebar from "../components/Sidebar"
 
-const page =  () => {
+const Page =  () => {
 
     const [chess] = useState(new Chess());
     // chess.move('e4');
@@ -47,4 +47,4 @@ const page =  () => {
     )
 }
 
-export default page
+export default Page

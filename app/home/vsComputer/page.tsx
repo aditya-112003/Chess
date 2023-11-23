@@ -7,7 +7,7 @@ import { Chess } from "chess.js";
 import ChatWindow from "@/app/components/ChatWindow";
 import MoveShow from "@/app/components/MoveShow";
 
-const page = () => {
+const Page = () => {
   const chessEngine = useMemo(() => new Engine(), []);
   const game = useMemo(() => new Chess(), []);
 
@@ -149,4 +149,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page;

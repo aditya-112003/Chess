@@ -25,7 +25,7 @@ function throttle<T extends (...args: any[]) => any>(
     };
 }
 
-const page = () => {
+const Page = () => {
     const [mode, setMode] = useState('Login')
     const [rotate, setRotate] = useState({ x: 0, y: 0 });
     const [name, setName] = useState('');
@@ -203,4 +203,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page
