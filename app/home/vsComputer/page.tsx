@@ -5,6 +5,7 @@ import { Chessboard } from "react-chessboard";
 import Engine from "@/public/engine";
 import { Chess } from "chess.js";
 import ChatWindow from "@/app/components/ChatWindow";
+import MoveShow from "@/app/components/MoveShow";
 
 const page = () => {
   const chessEngine = useMemo(() => new Engine(), []);
@@ -12,7 +13,10 @@ const page = () => {
 
   const [position, setPosition] = useState(game.fen());
   const [rightClickedSquares, setRightClickedSquares] = useState<any>({});
-  const [backgroundColor , setBackgroundColor] =useState({});
+  const [backgroundColor, setBackgroundColor] = useState({});
+  const [moveHistory, setMoveHistory] = useState<string[]>(['rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1']);
+  const [actualGameIndex , setActualGameIndex] = useState<number>(0);
+  const [currentMoveIndex, setCurrentMoveIndex] = useState<number>(1);
 
   const computerMove = () => {
     try {
@@ -31,7 +35,7 @@ const page = () => {
           to: bestMove?.substring(2, 4),
           promotion: bestMove.substring(4, 5),
         };
-        console.log("Move details:", moveDetails);
+        // console.log("Move details:", moveDetails);
       }
       if (bestMove) {
         game.move({
@@ -39,15 +43,29 @@ const page = () => {
           to: bestMove.substring(2, 4),
           promotion: bestMove.substring(4, 5),
         }, { strict: true });
-        setPosition(game.fen());
-        if( game.isCheck()){
-          console.log(game.pgn());
+
+        setMoveHistory(prevMoveHistory => {
+          const newMove = [...prevMoveHistory, game.fen()];
+          setCurrentMoveIndex(newMove.length - 1);
+          return newMove;
+        });
+
+        if (game.isCheckmate()) {
+          const sound = new Audio("/sounds/checkmate.mp3");
+          sound.play();
+          setTimeout(() => { setPosition(game.fen()) }, 0)
+        } else {
+          setPosition(game.fen());
         }
-        if (game.isCheckmate()) alert('Chal kal try krna !!');
+        // console.log(game.pgn());
+        // console.log(game.moves());
+        if (game.isCheck()) {
+
+        }
         if (game.isDraw()) alert("Draw!!");
       }
     });
-  }, [chessEngine, game])
+  }, [chessEngine, game ])
 
   const onDrop = (sourceSquare: string, targetSquare: string, piece: string) => {
     try {
@@ -57,6 +75,10 @@ const page = () => {
         to: targetSquare,
         // promotion: piece[1].toLowerCase() ?? "q",
       }, { strict: true });
+
+      const newMove = [...moveHistory, game.fen()];
+      setMoveHistory(newMove);
+      setCurrentMoveIndex(moveHistory.length-1);
 
       setPosition(game.fen());
 
@@ -90,13 +112,39 @@ const page = () => {
   const onSquareClick = (square: any) => {
     setRightClickedSquares({});
   }
+  const handleBackMove = () => {
+    if (currentMoveIndex > 0) {
+      setPosition(moveHistory[currentMoveIndex-1]);
+      setCurrentMoveIndex(currentMoveIndex - 1);
+      console.log(currentMoveIndex);
+    }
+    // game.undo();
+    // console.log(game.fen());
+    // setPosition(game.fen());
+  }
+
+  const handleFrontMove = () => {
+    if (currentMoveIndex < moveHistory.length - 1) {
+      setPosition(moveHistory[currentMoveIndex+1]);
+      setCurrentMoveIndex(currentMoveIndex + 1);
+      console.log(currentMoveIndex);
+    }
+  }
+
+  const handleReset = () => {
+    game.reset();
+    setMoveHistory(['rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1']);
+    setPosition(game.fen());
+  }
 
   return (
     <div className="flex items-center justify-evenly h-screen">
-      <ChatWindow/>
+      <ChatWindow />
       <div>
-        <Chessboard boardWidth={600} id="PlayVsStockfish" position={position} onPieceDrop={onDrop} onSquareRightClick={onSquareRightClick} customSquareStyles={{ ...rightClickedSquares }} onSquareClick={onSquareClick} customBoardStyle={{ borderRadius: "4px", boxShadow: "0 2px 10px rgba(0, 0, 0, 0.8)" , ...backgroundColor , e1 : "blue" }}  />
+        <Chessboard boardWidth={600} id="PlayVsStockfish" position={position} onPieceDrop={onDrop} onSquareRightClick={onSquareRightClick} customSquareStyles={{ ...rightClickedSquares }} onSquareClick={onSquareClick} customBoardStyle={{ borderRadius: "4px", boxShadow: "0 2px 10px rgba(0, 0, 0, 0.8)", ...backgroundColor, e1: "blue" }} />
       </div>
+      <MoveShow chesspos={game.pgn()} handleBackMove={handleBackMove} opponent={'Bot'} user={'Anonymous'} handleFrontMove={handleFrontMove} handleReset={handleReset} currentMoveIndex={currentMoveIndex} />
+      <button onClick={() => setPosition(moveHistory[currentMoveIndex])}>hello</button>
     </div>
   )
 }

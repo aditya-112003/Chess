@@ -1,4 +1,5 @@
 'use client'
+import React from 'react'
 
 import './test.css'
 import Image from "next/image"
